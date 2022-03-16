@@ -1,0 +1,148 @@
+import sys
+import pygame
+import time
+import random
+
+
+def start():
+    # размер окна-------------------------------------------------------------------------------------------
+    size_x=1200
+    size_y=800
+
+
+    # цвета-------------------------------------------------------------------------------------------------
+    bg_color=(0,0,0)
+    snake_color=(200,0,0)
+    food_color=(100,100,0)
+    white=(255,255,255)
+
+
+    pygame.init()
+    screen=pygame.display.set_mode((size_x,size_y))
+    pygame.display.set_caption("Змейка")
+    game=True
+    close=False
+
+    screen.fill(bg_color)
+    pygame.display.flip()
+    clock = pygame.time.Clock()
+
+
+    # начальные координаты
+    x_n=60
+    y_n=60
+
+
+    x_t=x_n
+    y_t=y_n
+    x_s=0
+    y_s=0
+    font_style = pygame.font.SysFont(None, 50)
+    def message1(msg, color):
+        mesg = font_style.render(msg, True, color)
+        screen.blit(mesg, (100, 100))
+
+    def message2(msg, color):
+        mesg = font_style.render(msg, True, color)
+        screen.blit(mesg, (100, 300))
+
+    while close==False:
+        # if pygame.KEYDOWN in pygame.event.get():
+        #     if event.key == pygame.K_SPACE:
+        #         game = True
+        while game==False:
+            message1("You lost", white)
+            message2('Если хотите начать заного нажмите "Space"', white)
+            pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        game = True
+                        x_t = x_n
+                        y_t = y_n
+
+
+        # pygame.display.update()
+    #основной цикл игры:--------------------------------------------------------------------------------------
+        while game==True:
+
+
+
+            # вывод действий пользователя-------------------------------------------------------------------------
+            for event in pygame.event.get():
+                if event.type==pygame.QUIT:
+                    sys.exit()
+
+
+
+                # изменение скорости и направления-----------------------------------------------------------------
+                if event.type==pygame.KEYDOWN:
+                    if event.key==pygame.K_LEFT:
+                        x_s=-40
+                        y_s=0
+                    elif event.key==pygame.K_RIGHT:
+                        x_s=40
+                        y_s=0
+                    elif event.key == pygame.K_UP:
+                        x_s=0
+                        y_s=-40
+                    elif event.key == pygame.K_DOWN:
+                        x_s=0
+                        y_s=40
+
+
+                    # при нажатие "ESC" "змея" возвращается на начальные координаты--------------------------------
+                    elif event.key == pygame.K_ESCAPE:
+                        x_t=x_n
+                        y_t=y_n
+                        screen.fill(bg_color)
+                        pygame.display.flip()
+
+
+
+                    # при нажатие "SPACE" "змея" останавливается---------------------------------------------------
+                    elif event.key == pygame.K_SPACE:
+                        x_s=0
+                        y_s=0
+
+
+
+            # проверка положения-----------------------------------------------------------------------------------
+            # ИСПРАВИТЬ: НУЖЕН КОНЕЦ ИГРЫ ВМЕСТО ОСТАНОВКИ "ЗМЕИ"
+            if x_t+x_s>size_x or x_t+x_s<0 or y_t+y_s>size_y or y_t+y_s<0:
+                x_s=0
+                y_s=0
+                screen.fill(bg_color)
+                message1("You lost", white)
+                message2('Если хотите начать заного нажмите "Space"', white)
+                pygame.display.update()
+                time.sleep(2)
+                game=False
+
+
+
+
+            x_t+=x_s
+            y_t+=y_s
+            # обновление экрана------------------------------------------------------------------------------------
+            screen.fill(bg_color)
+            pygame.draw.line(screen, white, (10, 10), (1190, 10), 3)
+            pygame.draw.line(screen, white, (10, 10), (10, 790), 3)
+            pygame.draw.line(screen, white, (1190, 10), (1190, 790), 3)
+            pygame.draw.line(screen, white, (10, 790), (1190, 790), 3)
+            pygame.draw.circle(screen, snake_color, (x_t, y_t), 20)
+            pygame.display.update()
+            clock.tick(2)
+
+        # screen.fill(bg_color)
+        # message("You lost", white)
+        # pygame.display.update()
+        # time.sleep(2)
+        # screen.fill(bg_color)
+        # message('Если хотите начать заного нажмите "Space"',white)
+        # pygame.display.update()
+        # time.sleep(2)
+
+start()
