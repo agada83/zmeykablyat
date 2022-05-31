@@ -6,8 +6,8 @@ import random
 
 def start():
     # размер окна-------------------------------------------------------------------------------------------
-    size_x=1200
-    size_y=800
+    size_x=1220
+    size_y=820
 
 
     # цвета-------------------------------------------------------------------------------------------------
@@ -28,16 +28,20 @@ def start():
     clock = pygame.time.Clock()
 
 
-    # начальные координаты
-    x_n=60
-    y_n=60
-
-
+    # начальные координаты------------------------------------------------------------------------------------
+    x_n=30
+    y_n=30
+    mx=[]
+    my=[]
     x_t=x_n
     y_t=y_n
     x_s=0
     y_s=0
     font_style = pygame.font.SysFont(None, 50)
+    x_r=random.randint(0,29)
+    y_r=random.randint(0,19)
+
+
     def message1(msg, color):
         mesg = font_style.render(msg, True, color)
         screen.blit(mesg, (100, 100))
@@ -50,6 +54,7 @@ def start():
         # if pygame.KEYDOWN in pygame.event.get():
         #     if event.key == pygame.K_SPACE:
         #         game = True
+        c=0
         while game==False:
             message1("You lost", white)
             message2('Если хотите начать заного нажмите "Space"', white)
@@ -67,6 +72,7 @@ def start():
         # pygame.display.update()
     #основной цикл игры:--------------------------------------------------------------------------------------
         while game==True:
+
 
 
 
@@ -120,21 +126,43 @@ def start():
                 pygame.display.update()
                 time.sleep(2)
                 game=False
-
-
+            x_f = x_r * 40 + 30
+            y_f = y_r * 40 + 30
+            if (x_t+x_s==x_f) and (y_t+y_s==y_f):
+                x_r=random.randint(0,29)
+                y_r=random.randint(0,19)
+                c+=1
+                print(c)
+                # print(x_r * 40 + 30, y_r * 40 + 30)
+                mx.append(x_t)
+                my.append(y_t)
+            # if x_s!=0 and y_s!=0:
+            for t in range(0,len(mx),):
+                mx[t-1] = mx[t]
+                my[t-1] = my[t]
+            if c>0:
+                mx[0] = x_t
+                my[0] = y_t
 
 
             x_t+=x_s
             y_t+=y_s
             # обновление экрана------------------------------------------------------------------------------------
+
             screen.fill(bg_color)
-            pygame.draw.line(screen, white, (10, 10), (1190, 10), 3)
-            pygame.draw.line(screen, white, (10, 10), (10, 790), 3)
-            pygame.draw.line(screen, white, (1190, 10), (1190, 790), 3)
-            pygame.draw.line(screen, white, (10, 790), (1190, 790), 3)
-            pygame.draw.circle(screen, snake_color, (x_t, y_t), 20)
+            pygame.draw.circle(screen, food_color, (x_f, y_f), 20)
+
+
+            for t in range(len(mx)):
+                pygame.draw.circle(screen, snake_color, (mx[t-1], my[t-1]), 20)
+
+            pygame.draw.line(screen, white, (0, 2), (1220, 2), 14)
+            pygame.draw.line(screen, white, (2, 0), (2, 820), 14)
+            pygame.draw.line(screen, white, (1216, 0), (1216, 820), 14)
+            pygame.draw.line(screen, white, (0, 816), (1220, 816), 14)
+            pygame.draw.circle(screen, white, (x_t, y_t), 20)
             pygame.display.update()
-            clock.tick(2)
+            clock.tick(5)
 
         # screen.fill(bg_color)
         # message("You lost", white)
